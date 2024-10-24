@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import glob
 import argparse
 import subprocess
@@ -72,26 +74,37 @@ def get_env(pid):
 
 
 def cgroup_gpus(job_dir, cgroups):
+    """Get GPU information for a job's cgroup using nvidia-smi directly"""
     if cgroups == 1:
         task_file = os.path.join(job_dir, "tasks")
     else:
         cgroup_path = os.path.join(job_dir, "gpu_probe")
         # This will create a new cgroup under the root of the job.
         # This is required for v2 since we can only add tasks to leaf cgroups
-        os.mkdir(cgroup_path)
+        if not os.path.exists(cgroup_path):
+            os.mkdir(cgroup_path)
         task_file = os.path.join(cgroup_path, "cgroup.procs")
+
     try:
-        res = subprocess.check_output(["get_gpus.sh", task_file]).strip().decode()
-    except FileNotFoundError:
-        # This is most likely because nvidia-smi is not on the machine
-        return []
+        # Write current process PID to task file
+        with open(task_file, 'w') as f:
+            f.write(str(os.getpid()) + '\n')
+
+        # Run nvidia-smi -L
+        try:
+            res = subprocess.check_output(["nvidia-smi", "-L"]).strip().decode()
+        except (subprocess.SubprocessError, FileNotFoundError):
+            # This is most likely because nvidia-smi is not on the machine
+            return []
+
     finally:
         if cgroups == 2:
-            # We can remove a cgroup if no tasks are remaining inside
-            os.rmdir(cgroup_path)
+            try:
+                os.rmdir(cgroup_path)
+            except OSError:
+                pass
 
     gpus = []
-
     mig = 'MIG' in res
     for line in res.split('\n'):
         m = GPU_UUID_RE.search(line)

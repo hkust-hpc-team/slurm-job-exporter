@@ -13,6 +13,12 @@ If DCGM is installed and running, it will be used instead of NVML. DCGM have mor
 
 `nvidia-smi -L` is run in each cgroup to detect which GPU is allocated to a Slurm job.
 
+## Install
+```bash
+pip install -r requirements.txt
+./slurm-job-exporter
+```
+
 ## Usage
 ```
 usage: slurm-job-exporter.py [-h] [--port PORT]

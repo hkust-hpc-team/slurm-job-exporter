@@ -1,2 +1,2 @@
-nvidia-ml-py==11.450.51
-prometheus-client==0.9.0
+prometheus-client~=0.21.0
+psutil~=5.8.0
