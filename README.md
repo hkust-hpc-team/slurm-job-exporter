@@ -1,6 +1,24 @@
 # Slurm-job-exporter
 Prometheus exporter for the stats in the cgroup accounting with Slurm. This will also collect stats of a job using NVIDIA GPUs.
 
+## Structure after deployment
+```
+/
+├── etc/
+│   ├── systemd/
+│   │   └── system/
+│   │       └── slurm-job-exporter.service
+│   └── sysconfig/
+│       └── slurm-job-exporter.conf
+└── usr/
+    └── lib/
+        └── slurm-job-exporter/
+            ├── setup.sh
+            ├── run.sh
+            ├── slurm_job_exporter.py
+            └── requirements.txt
+```
+
 ## Requirements
 Slurm need to be configured with `JobAcctGatherType=jobacct_gather/cgroup`. Stats are collected from the cgroups created by Slurm for each job.
 
