@@ -1,22 +1,24 @@
 [Unit]
 Description=Slurm-job-exporter
-After=network.target
-
+After=network.target nvidia-dcgm.service
 
 [Service]
 Type=simple
 User=slurm-job-exporter
 Environment=PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/sysconfig/slurm-job-exporter.conf
-AmbientCapabilities=CAP_SYS_ADMIN
-ReadWritePaths=/sys/fs/cgroup
+AmbientCapabilities=CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_PTRACE
+CapabilityBoundingSet=CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_PTRACE
+ReadOnlyPaths=/sys/fs/cgroup
+ReadOnlyPaths=/sys/fs/cgroup/system.slice
+ReadWritePaths=/sys/fs/cgroup/system.slice/slurmstepd.scope
 ExecStart=/usr/lib/slurm-job-exporter/run.sh
-PIDFile=/var/run/slurm-job-exporter/slurm-job-exporter.pid
-KillMode=process
 PrivateDevices=no
 ProtectSystem=false
-ProtectHome=false
-
+DeviceAllow=/dev/nvidia* rwm
+DeviceAllow=/dev/nvidiactl rwm
+DeviceAllow=/dev/nvidia-uvm rwm
+DeviceAllow=/dev/nvidia-uvm-tools rwm
 
 [Install]
 WantedBy=multi-user.target
