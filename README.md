@@ -19,6 +19,11 @@ Prometheus exporter for the stats in the cgroup accounting with Slurm. This will
             └── requirements.txt
 ```
 
+## Install
+```bash
+./setup.sh {install|uninstall} [prefix]
+```
+
 ## Requirements
 Slurm need to be configured with `JobAcctGatherType=jobacct_gather/cgroup`. Stats are collected from the cgroups created by Slurm for each job.
 
@@ -31,11 +36,6 @@ If DCGM is installed and running, it will be used instead of NVML. DCGM have mor
 
 `nvidia-smi -L` is run in each cgroup to detect which GPU is allocated to a Slurm job.
 
-## Install
-```bash
-pip install -r requirements.txt
-./slurm-job-exporter
-```
 
 ## Usage
 ```
