@@ -5,5 +5,8 @@
 dist=$1
 [ -z "$dist" ] && echo "$0 {dist}" && exit 1
 
-spectool -g -R slurm-job-exporter-$dist.spec
+mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+cp L20.patch ~/rpmbuild/SOURCES/
+
+spectool -g -R -f slurm-job-exporter-$dist.spec
 rpmbuild --define "dist .$dist" -ba slurm-job-exporter-$dist.spec

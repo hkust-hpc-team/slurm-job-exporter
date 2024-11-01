@@ -6,6 +6,7 @@ Summary:  Prometheus exporter for stats in slurm accounting cgroups
 License:  Apache License 2.0
 URL:      https://github.com/guilbaults/slurm-job-exporter
 Source0:  https://github.com/guilbaults/%{name}/archive/refs/tags/v%{version}.tar.gz
+Patch0:   L20.patch
 
 BuildArch:      noarch
 BuildRequires:	systemd
@@ -17,6 +18,7 @@ Prometheus exporter for the stats in the cgroup accounting with slurm. This will
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 
